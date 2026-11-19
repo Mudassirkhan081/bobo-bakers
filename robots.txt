@@ -1,0 +1,15 @@
+# NOTE: crawlers only read robots.txt from a domain root. Active once a custom domain is connected.
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /config/
+Disallow: /storage/
+Disallow: /database.sql
+Disallow: /README.md
+
+# Allow image crawling for Google Images traffic
+User-agent: Googlebot-Image
+Allow: /
+
+Sitemap: https://mudassirkhan081.github.io/BoboBakers/sitemap.xml

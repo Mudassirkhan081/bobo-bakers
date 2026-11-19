@@ -1,0 +1,23 @@
+{
+  "name": "Bobo Baker's - Custom Cakes Lahore",
+  "short_name": "Bobo Baker's",
+  "description": "Order handcrafted custom cakes in Lahore. Weddings, birthdays, Eid, kids' themes and cupcakes.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FEF8F2",
+  "theme_color": "#C8104A",
+  "icons": [
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "303x304",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "scope": "./"
+}

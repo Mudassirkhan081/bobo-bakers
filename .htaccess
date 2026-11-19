@@ -1,0 +1,74 @@
+# ============================================================
+#  BOBO BAKER'S - Apache configuration
+# ============================================================
+
+RewriteEngine On
+
+# ---- Force HTTPS ----
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ---- Force the www version (one canonical host = better SEO) ----
+RewriteCond %{HTTP_HOST} ^bobobakers\.com [NC]
+RewriteRule ^(.*)$ https://www.bobobakers.com/$1 [L,R=301]
+
+# ---- Serve the site at "/" instead of /BOBOBAKERS.html ----
+DirectoryIndex index.html BOBOBAKERS.html index.php
+
+# ---- Old filename keeps working, but points at the clean URL ----
+RewriteCond %{THE_REQUEST} \s/+BOBOBAKERS\.html[\s?] [NC]
+RewriteRule ^ / [R=301,L]
+
+# ============================================================
+#  SECURITY
+# ============================================================
+<FilesMatch "\.(sql|md|log|json|lock|ini|yml|yaml|bak|old)$">
+  Require all denied
+</FilesMatch>
+
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+# Block the rate-limit storage folder
+RedirectMatch 404 ^/storage/
+
+Options -Indexes
+ServerSignature Off
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+</IfModule>
+
+# ============================================================
+#  PERFORMANCE - caching + compression
+# ============================================================
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml application/xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp             "access plus 1 year"
+  ExpiresByType image/png              "access plus 1 year"
+  ExpiresByType image/jpeg             "access plus 1 year"
+  ExpiresByType image/gif              "access plus 1 year"
+  ExpiresByType image/svg+xml          "access plus 1 year"
+  ExpiresByType text/css               "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType text/html              "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+</IfModule>
+
+# ---- Custom error pages ----
+ErrorDocument 404 /404.html
